@@ -19,26 +19,27 @@ public class GeocoderProviderBing {
 					.get().build();
 
 			Response response = client.newCall(request).execute();
-			String dataFromBing =response.body().string();
-			String point = getJsonKey(dataFromBing);
-	        return point;
+			String dataFromBing = response.body().string();
+			JSONObject point = getJsonKey(dataFromBing);
+            String geometry = "POINT ("+point.getJSONArray("coordinates").get(1).toString()+" "+point.getJSONArray("coordinates").get(0).toString()+")"; 
+			return geometry;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
-       
 	}
-	private String getJsonKey(String jsonObject) {
+
+	private JSONObject getJsonKey(String jsonObject) {
 		JSONObject resobj = new JSONObject(jsonObject);
 		Iterator<?> keys = resobj.keys();
-		while(keys.hasNext() ) {
-		    String key = (String)keys.next();
-		    if ( resobj.get(key) instanceof JSONObject ) {
-		        JSONObject xx = new JSONObject(resobj.get(key).toString());
-		        String jsonData = xx.getString("point");
-				return jsonData;
-		    }
+		while (keys.hasNext()) {
+			String key = (String) keys.next();
+			if (key.equals("resourceSets")) {
+				JSONObject propToRead = resobj.getJSONArray("resourceSets").getJSONObject(0).getJSONArray("resources")
+						.getJSONObject(0).getJSONObject("point");
+				return propToRead;
+			}
 		}
 		return null;
 	}
