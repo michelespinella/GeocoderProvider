@@ -9,7 +9,9 @@ public class App {
 	private static final Logger logger = Logger.getLogger(App.class);
 
 	public static void main(String[] args) {
-		getCoordinates();
+        String address = args[0];
+        String postalcode = args[1];
+		getCoordinates(address, postalcode);
 		//System.out.println(getLocalCurrentDate());
 	}
 
@@ -24,10 +26,10 @@ public class App {
 
 	}
 	
-	private static Boolean getCoordinates() {
+	private static Boolean getCoordinates(String address, String postalcode) {
 		
 		GeocoderProviderBing geocodedAddress = new GeocoderProviderBing();
-		System.out.println(geocodedAddress.getCoordinates());
+		System.out.println(geocodedAddress.getCoordinates(address, postalcode));
 		return Boolean.TRUE;
 		
 	}

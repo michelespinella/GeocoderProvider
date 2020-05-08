@@ -1,7 +1,9 @@
 package it.corvallis.geocoder.utils;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Properties;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -10,12 +12,17 @@ import org.json.*;
 
 public class GeocoderProviderBing {
 
-	public String getCoordinates() {
+	public String getCoordinates(String address, String postalcode) {
 		try {
+		    FileReader reader=new FileReader("application.properties");  
+		    Properties p=new Properties();  
+		    p.load(reader);
+		    String BingKey = p.getProperty("BingKey");
+		    String BingEndpoint = p.getProperty("BingEndpoint");
 			OkHttpClient client = new OkHttpClient();
 
 			Request request = new Request.Builder().url(
-					"http://dev.virtualearth.net/REST/v1/Locations?countryRegion=ITA&postalCode=73100&addressLine=77%2BVIA%2BDALMAZIO%2BBIRAGO&maxResults=2&key=Aq7ibVaUqO0zn3fw1zEih5tcNeN8B5cc5EQjDJaupcSNvMlbm9MgDy5Iy-FfkC9u")
+					BingEndpoint+"?countryRegion=ITA&postalCode="+postalcode+"&addressLine="+address+"&maxResults=2&key="+BingKey)
 					.get().build();
 
 			Response response = client.newCall(request).execute();
