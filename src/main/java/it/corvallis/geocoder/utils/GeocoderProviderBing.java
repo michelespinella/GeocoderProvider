@@ -14,7 +14,7 @@ import java.io.FileReader;
 
 public class GeocoderProviderBing {
 
-	public String getCoordinates(String address, String postalcode) {
+	public String getGeometry(String address, String postalcode, String city) {
 		try {
 		    FileReader reader=new FileReader("application.properties");  
 		    Properties p=new Properties();  
@@ -23,8 +23,9 @@ public class GeocoderProviderBing {
 		    String BingEndpoint = p.getProperty("BingEndpoint");
 			OkHttpClient client = new OkHttpClient();
 
+			String fullAddress = address+" "+city;
 			Request request = new Request.Builder().url(
-					BingEndpoint+"?countryRegion=ITA&postalCode="+postalcode+"&addressLine="+address+"&maxResults=2&key="+BingKey)
+					BingEndpoint+"?countryRegion=ITA&postalCode="+postalcode+"&addressLine="+fullAddress+"&maxResults=2&key="+BingKey)
 					.get().build();
 
 			Response response = client.newCall(request).execute();
@@ -47,7 +48,7 @@ public class GeocoderProviderBing {
             reader = new CSVReader(new FileReader(csvFile), ',', '/', 1);
             String[] line;
             while ((line = reader.readNext()) != null) {
-            	String geometry = this.getCoordinates(line[6], "73100");
+            	String geometry = this.getGeometry(line[6], "73100", "Lecce");
                 System.out.println(line + "Indirizzo [id= " + line[6] +" geometry="+ geometry +"]");
             }
         } catch (IOException e) {

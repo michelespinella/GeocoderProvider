@@ -9,21 +9,28 @@ public class App {
 	private static final Logger logger = Logger.getLogger(App.class);
 
 	public static void main(String[] args) {
-        String address = args[0];
-        String postalcode = args[1];
-        String geocoderType = args[2];
-        if (geocoderType.equals("BING")) {
-    		getCoordinates(address, postalcode);
-    		//System.out.println(getLocalCurrentDate());
-        } else if(geocoderType.equals("CSV")) {
-    		GeocoderProviderBing geocodedAddress = new GeocoderProviderBing();
-    		try {
+		String address = args[0];
+		String postalcode = args[1];
+		String city = args[2];
+		String geocoderType = args[3];
+		if (geocoderType.equals("BING")) {
+			GeocoderProviderBing geocodedAddress = new GeocoderProviderBing();
+			try {
+				geocodedAddress.getGeometry(address, postalcode, city);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// System.out.println(getLocalCurrentDate());
+		} else if (geocoderType.equals("CSV")) {
+			GeocoderProviderBing geocodedAddress = new GeocoderProviderBing();
+			try {
 				geocodedAddress.bulkGeocoder();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}  		
-        }
+			}
+		}
 
 	}
 
@@ -36,14 +43,6 @@ public class App {
 		LocalDate date = new LocalDate();
 		return date.toString();
 
-	}
-	
-	private static Boolean getCoordinates(String address, String postalcode) {
-		
-		GeocoderProviderBing geocodedAddress = new GeocoderProviderBing();
-		System.out.println(geocodedAddress.getCoordinates(address, postalcode));
-		return Boolean.TRUE;
-		
 	}
 
 }
