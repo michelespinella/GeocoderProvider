@@ -11,8 +11,20 @@ public class App {
 	public static void main(String[] args) {
         String address = args[0];
         String postalcode = args[1];
-		getCoordinates(address, postalcode);
-		//System.out.println(getLocalCurrentDate());
+        String geocoderType = args[2];
+        if (geocoderType.equals("BING")) {
+    		getCoordinates(address, postalcode);
+    		//System.out.println(getLocalCurrentDate());
+        } else if(geocoderType.equals("CSV")) {
+    		GeocoderProviderBing geocodedAddress = new GeocoderProviderBing();
+    		try {
+				geocodedAddress.bulkGeocoder();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  		
+        }
+
 	}
 
 	private static String getLocalCurrentDate() {
