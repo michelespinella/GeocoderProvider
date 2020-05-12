@@ -30,7 +30,24 @@ public class App {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else if (geocoderType.equals("LIQ")){
+			GeocoderProviderLocIq geocodedAddress = new GeocoderProviderLocIq();
+			try {
+				geocodedAddress.getGeometry(address, postalcode, city);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if (geocoderType.equals("MAPQ")){
+			GeocoderProviderMapQ geocodedAddress = new GeocoderProviderMapQ();
+			try {
+				geocodedAddress.getGeometry(address, postalcode, city);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+
 
 	}
 

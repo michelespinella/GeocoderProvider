@@ -12,25 +12,26 @@ import org.json.*;
 import com.opencsv.CSVReader;
 import java.io.FileReader;
 
-public class GeocoderProviderLocIq {
+public class GeocoderProviderMapQ {
 	public String getGeometry(String address, String postalcode, String city) {
 		try {
 		    FileReader reader=new FileReader("application.properties");  
 		    Properties p=new Properties();  
 		    p.load(reader);
-		    String LiqKey = p.getProperty("LocationIQKey");
-		    String LiqEndPoint = p.getProperty("LocationIQEndPoint");
+		    String MapQuestKey = p.getProperty("MapQuestKey");
+		    String MapQuestEndpoint = p.getProperty("MapQuestEndPoint");
 			OkHttpClient client = new OkHttpClient();
 
-			String fullAddress = address+" "+postalcode+" "+city;
+			String addressToFormat = address+" "+city;
+			String fullAddress = addressToFormat.replace(" ", "+");
 			Request request = new Request.Builder().url(
-					LiqEndPoint+"?key="+LiqKey+"&q="+fullAddress+"&format=json")
+					MapQuestEndpoint+"?key="+MapQuestKey+"&location="+fullAddress)
 					.get().build();
 
 			Response response = client.newCall(request).execute();
-			String dataFromLiq = response.body().string();
-			JSONObject point = getJsonKey(dataFromLiq);
-            String geometry = "POINT ("+point.get("lon").toString()+" "+point.get("lat").toString()+")"; 
+			String dataFromBing = response.body().string();
+			JSONObject point = getJsonKey(dataFromBing);
+            String geometry = "POINT ("+point.get("lng").toString()+" "+point.get("lat").toString()+")"; 
 			return geometry;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -57,8 +58,16 @@ public class GeocoderProviderLocIq {
     }
     
 	private JSONObject getJsonKey(String jsonObject) {
-		JSONArray resobj = new JSONArray(jsonObject);
-		JSONObject propToRead = resobj.getJSONObject(0);
-		return propToRead;
+		JSONObject resobj = new JSONObject(jsonObject);
+		Iterator<?> keys = resobj.keys();
+		while (keys.hasNext()) {
+			String key = (String) keys.next();
+			if (key.equals("results")) {
+				JSONObject propToRead = resobj.getJSONArray("results").getJSONObject(0).getJSONArray("locations")
+						.getJSONObject(0).getJSONObject("latLng");
+				return propToRead;
+			}
+		}
+		return null;
 	}
 }
