@@ -11,9 +11,13 @@ import com.squareup.okhttp.Response;
 import org.json.*;
 import com.opencsv.CSVReader;
 import java.io.FileReader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GeocoderProviderMapQ {
-	public String getGeometry(String address, String postalcode, String city) {
+    private static final Logger logger = LogManager.getLogger(GeocoderProviderMapQ.class);	
+    
+    public String getGeometry(String address, String postalcode, String city) {
 		try {
 		    FileReader reader=new FileReader("application.properties");  
 		    Properties p=new Properties();  
@@ -29,9 +33,10 @@ public class GeocoderProviderMapQ {
 					.get().build();
 
 			Response response = client.newCall(request).execute();
-			String dataFromBing = response.body().string();
-			JSONObject point = getJsonKey(dataFromBing);
+			String dataFromMapQ = response.body().string();
+			JSONObject point = getJsonKey(dataFromMapQ);
             String geometry = "POINT ("+point.get("lng").toString()+" "+point.get("lat").toString()+")"; 
+            logger.debug("WKT Geometry : " + geometry);
 			return geometry;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

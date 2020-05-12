@@ -1,8 +1,6 @@
 package it.corvallis.geocoder.utils;
 
 import org.apache.log4j.Logger;
-import org.joda.time.LocalDate;
-import it.corvallis.geocoder.utils.GeocoderProviderBing;
 
 public class App {
 
@@ -13,6 +11,8 @@ public class App {
 		String postalcode = args[1];
 		String city = args[2];
 		String geocoderType = args[3];
+        logger.debug("Parameters : " + address +" "+postalcode+" "+city+" "+geocoderType);
+
 		if (geocoderType.equals("BING")) {
 			GeocoderProviderBing geocodedAddress = new GeocoderProviderBing();
 			try {
@@ -48,17 +48,6 @@ public class App {
 			}
 		}
 
-
-	}
-
-	private static String getLocalCurrentDate() {
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("getLocalCurrentDate() is executed!");
-		}
-
-		LocalDate date = new LocalDate();
-		return date.toString();
 
 	}
 

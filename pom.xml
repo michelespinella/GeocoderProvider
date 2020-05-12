@@ -2,18 +2,18 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.mkyong.core.utils</groupId>
-	<artifactId>dateUtils</artifactId>
+	<groupId>it.corvallis.geocoder.utils</groupId>
+	<artifactId>GeocoderProvider</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>dateUtils</name>
+	<name>GeocoderProvider</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<jdk.version>1.7</jdk.version>
+		<jdk.version>1.8</jdk.version>
 		<jodatime.version>2.5</jodatime.version>
 		<junit.version>4.11</junit.version>
-		<log4j.version>1.2.17</log4j.version>
+		<log4j.version>2.11.2</log4j.version>
 
 		<sonar.projectKey>michelespinella_GeocoderProvider</sonar.projectKey>
 		<sonar.organization>michelespinella-github</sonar.organization>
@@ -33,11 +33,17 @@
 			<artifactId>joda-time</artifactId>
 			<version>${jodatime.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>com.squareup.okhttp</groupId>
 			<artifactId>okhttp</artifactId>
