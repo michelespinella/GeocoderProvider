@@ -63,7 +63,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>dateutils</finalName>
+		<finalName>GeocoderProvider</finalName>
 		<plugins>
 
 			<!-- download source code in Eclipse, best practice -->

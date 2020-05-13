@@ -2,17 +2,20 @@ package it.corvallis.geocoder.utils;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Properties;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.*;
 import com.opencsv.CSVReader;
-import java.io.FileReader;
 
 public class GeocoderProviderLocIq {
+    private static final Logger logger = LogManager.getLogger(GeocoderProviderLocIq.class);	
+
 	public String getGeometry(String address, String postalcode, String city) {
 		try {
 		    FileReader reader=new FileReader("application.properties");  
@@ -30,10 +33,13 @@ public class GeocoderProviderLocIq {
 			Response response = client.newCall(request).execute();
 			String dataFromLiq = response.body().string();
 			JSONObject point = getJsonKey(dataFromLiq);
-            String geometry = "POINT ("+point.get("lon").toString()+" "+point.get("lat").toString()+")"; 
-			return geometry;
-		} catch (IOException e) {
+            String geometry = "POINT ("+point.get("lon").toString()+" "+point.get("lat").toString()+")";
+            logger.debug("Output WKT Geometry : " + geometry);
+            response.body().close();
+            return geometry;
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			logger.debug("Error : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return null;
@@ -51,6 +57,7 @@ public class GeocoderProviderLocIq {
                 System.out.println(line + "Indirizzo [id= " + line[6] +" geometry="+ geometry +"]");
             }
         } catch (IOException e) {
+        	logger.debug("Error : " + e.getMessage());
             e.printStackTrace();
         }
 

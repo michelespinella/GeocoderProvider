@@ -10,7 +10,6 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import org.json.*;
 import com.opencsv.CSVReader;
-import java.io.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,10 +35,12 @@ public class GeocoderProviderMapQ {
 			String dataFromMapQ = response.body().string();
 			JSONObject point = getJsonKey(dataFromMapQ);
             String geometry = "POINT ("+point.get("lng").toString()+" "+point.get("lat").toString()+")"; 
-            logger.debug("WKT Geometry : " + geometry);
-			return geometry;
-		} catch (IOException e) {
+            logger.debug("Output WKT Geometry : " + geometry);
+			response.body().close();
+            return geometry;
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			logger.debug("Error : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return null;
@@ -56,7 +57,8 @@ public class GeocoderProviderMapQ {
             	String geometry = this.getGeometry(line[6], "73100", "Lecce");
                 System.out.println(line + "Indirizzo [id= " + line[6] +" geometry="+ geometry +"]");
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+        	logger.debug("Error : " + e.getMessage());
             e.printStackTrace();
         }
 
