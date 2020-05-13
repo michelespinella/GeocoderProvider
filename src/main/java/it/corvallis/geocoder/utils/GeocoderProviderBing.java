@@ -21,7 +21,7 @@ public class GeocoderProviderBing {
 
 	public String getGeometry(String address, String postalcode, String city) {
 		try {
-		    FileReader reader=new FileReader("application.properties");  
+		    FileReader reader=new FileReader("./application.properties");  
 		    Properties p=new Properties();  
 		    p.load(reader);
 		    String BingKey = p.getProperty("BingKey");
