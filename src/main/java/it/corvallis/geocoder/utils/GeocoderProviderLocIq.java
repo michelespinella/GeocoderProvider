@@ -1,7 +1,10 @@
 package it.corvallis.geocoder.utils;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 import com.squareup.okhttp.OkHttpClient;
@@ -18,7 +21,8 @@ public class GeocoderProviderLocIq {
 
 	public String getGeometry(String address, String postalcode, String city) {
 		try {
-		    FileReader reader=new FileReader("./application.properties");  
+			InputStream in = getClass().getResourceAsStream("/application.properties"); 
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		    Properties p=new Properties();  
 		    p.load(reader);
 		    String LiqKey = p.getProperty("LocationIQKey");

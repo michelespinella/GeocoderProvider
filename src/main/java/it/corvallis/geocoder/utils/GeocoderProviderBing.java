@@ -1,7 +1,10 @@
 package it.corvallis.geocoder.utils;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -20,8 +23,9 @@ public class GeocoderProviderBing {
 	private static final Logger logger = LogManager.getLogger(GeocoderProviderBing.class);
 
 	public String getGeometry(String address, String postalcode, String city) {
-		try {
-		    FileReader reader=new FileReader("./application.properties");  
+		try {			
+			InputStream in = getClass().getResourceAsStream("/application.properties"); 
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		    Properties p=new Properties();  
 		    p.load(reader);
 		    String BingKey = p.getProperty("BingKey");
