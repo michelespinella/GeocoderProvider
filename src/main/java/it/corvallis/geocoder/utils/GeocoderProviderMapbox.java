@@ -5,12 +5,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -33,13 +40,28 @@ public class GeocoderProviderMapbox extends GeocoderProvider {
 			// FileReader reader=new FileReader("application.properties");
 			Properties p = new Properties();
 			p.load(reader);
-			String MapboxKey = p.getProperty("MapQuestKey");
-			String MapboxEndPoint = p.getProperty("MapQuestEndPoint");
-			
+			String MapboxKey = p.getProperty("MapboxKey");
+			String MapboxEndPoint = p.getProperty("MapboxEndPoint");
+			String fullAddress = address+" "+postalcode+" "+city;
+
 			HttpClient client = HttpClientBuilder.create().build();
 			StringBuilder url = new StringBuilder();
 			url.append(MapboxEndPoint);
-			
+			url.append(encodeValue(fullAddress)+".json?access_token=");
+			url.append(MapboxKey);
+			HttpGet getRequest = new HttpGet(url.toString());
+			HttpResponse response = client.execute(getRequest);
+			logger.debug("Status Code: ", response.getStatusLine().getStatusCode());
+			if(response.getStatusLine().getStatusCode() == 200) {
+				String result = EntityUtils.toString(response.getEntity());
+				JSONObject point = getJsonKey(result.toString());
+	            String geometry = "POINT ("+point.getJSONArray("coordinates").get(0).toString()+" "+point.getJSONArray("coordinates").get(1).toString()+")"; 
+	            logger.debug("Output WKT Geometry : " + geometry);
+	            return geometry;
+			} else {
+				logger.debug("Error: ", response.toString());
+				throw new HttpResponseException(response.getStatusLine().getStatusCode(),response.getEntity().toString());
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.debug("Error : " + e.getMessage());
@@ -72,13 +94,20 @@ public class GeocoderProviderMapbox extends GeocoderProvider {
 		Iterator<?> keys = resobj.keys();
 		while (keys.hasNext()) {
 			String key = (String) keys.next();
-			if (key.equals("results")) {
-				JSONObject propToRead = resobj.getJSONArray("results").getJSONObject(0).getJSONArray("locations")
-						.getJSONObject(0).getJSONObject("latLng");
+			if (key.equals("features")) {
+				JSONObject propToRead = resobj.getJSONArray("features").getJSONObject(0).getJSONObject("geometry");
 				return propToRead;
 			}
 		}
 		return null;
 	}
+	
+    private static String encodeValue(String value) {
+        try {
+            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
+    }
 
 }
