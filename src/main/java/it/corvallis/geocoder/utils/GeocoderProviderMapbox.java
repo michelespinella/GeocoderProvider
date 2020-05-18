@@ -24,15 +24,14 @@ import org.json.JSONObject;
 
 import com.opencsv.CSVReader;
 
-
 public class GeocoderProviderMapbox extends GeocoderProvider {
 	private static final Logger logger = LogManager.getLogger(GeocoderProviderMapbox.class);
 
 	@Override
 	public String getGeoCoder(String street, String postCode, String city) throws ParseException, IOException {
-		return this.getGeometry(street, postCode, city);	
+		return this.getGeometry(street, postCode, city);
 	}
-	
+
 	public String getGeometry(String address, String postalcode, String city) {
 		try {
 			InputStream in = getClass().getResourceAsStream("/application.properties");
@@ -42,25 +41,27 @@ public class GeocoderProviderMapbox extends GeocoderProvider {
 			p.load(reader);
 			String MapboxKey = p.getProperty("MapboxKey");
 			String MapboxEndPoint = p.getProperty("MapboxEndPoint");
-			String fullAddress = address+" "+postalcode+" "+city;
+			String fullAddress = address + " " + postalcode + " " + city;
 
 			HttpClient client = HttpClientBuilder.create().build();
 			StringBuilder url = new StringBuilder();
 			url.append(MapboxEndPoint);
-			url.append(encodeValue(fullAddress)+".json?access_token=");
+			url.append(encodeValue(fullAddress) + ".json?access_token=");
 			url.append(MapboxKey);
 			HttpGet getRequest = new HttpGet(url.toString());
 			HttpResponse response = client.execute(getRequest);
 			logger.debug("Status Code: ", response.getStatusLine().getStatusCode());
-			if(response.getStatusLine().getStatusCode() == 200) {
+			if (response.getStatusLine().getStatusCode() == 200) {
 				String result = EntityUtils.toString(response.getEntity());
 				JSONObject point = getJsonKey(result.toString());
-	            String geometry = "POINT ("+point.getJSONArray("coordinates").get(0).toString()+" "+point.getJSONArray("coordinates").get(1).toString()+")"; 
-	            logger.debug("Output WKT Geometry : " + geometry);
-	            return geometry;
+				String geometry = "POINT (" + point.getJSONArray("coordinates").get(0).toString() + " "
+						+ point.getJSONArray("coordinates").get(1).toString() + ")";
+				logger.debug("Output WKT Geometry : " + geometry);
+				return geometry;
 			} else {
 				logger.debug("Error: ", response.toString());
-				throw new HttpResponseException(response.getStatusLine().getStatusCode(),response.getEntity().toString());
+				throw new HttpResponseException(response.getStatusLine().getStatusCode(),
+						response.getEntity().toString());
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -90,24 +91,29 @@ public class GeocoderProviderMapbox extends GeocoderProvider {
 	}
 
 	private JSONObject getJsonKey(String jsonObject) {
-		JSONObject resobj = new JSONObject(jsonObject);
-		Iterator<?> keys = resobj.keys();
-		while (keys.hasNext()) {
-			String key = (String) keys.next();
-			if (key.equals("features")) {
-				JSONObject propToRead = resobj.getJSONArray("features").getJSONObject(0).getJSONObject("geometry");
-				return propToRead;
+		try {
+			JSONObject resobj = new JSONObject(jsonObject);
+			Iterator<?> keys = resobj.keys();
+			while (keys.hasNext()) {
+				String key = (String) keys.next();
+				if (key.equals("features")) {
+					JSONObject propToRead = resobj.getJSONArray("features").getJSONObject(0).getJSONObject("geometry");
+					return propToRead;
+				}
 			}
+		} catch (Exception e) {
+			logger.debug("Error : " + e.getMessage());
+			e.printStackTrace();
 		}
 		return null;
 	}
-	
-    private static String encodeValue(String value) {
-        try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex.getCause());
-        }
-    }
+
+	private static String encodeValue(String value) {
+		try {
+			return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex.getCause());
+		}
+	}
 
 }
