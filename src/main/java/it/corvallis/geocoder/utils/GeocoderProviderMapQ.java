@@ -2,6 +2,7 @@ package it.corvallis.geocoder.utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Iterator;
@@ -12,12 +13,19 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import org.json.*;
 import com.opencsv.CSVReader;
+
+import org.apache.http.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class GeocoderProviderMapQ {
+public class GeocoderProviderMapQ extends GeocoderProvider {
     private static final Logger logger = LogManager.getLogger(GeocoderProviderMapQ.class);	
-    
+	
+    @Override
+	public String getGeoCoder(String street, String postCode, String city) throws ParseException, IOException {
+		return this.getGeometry(street, postCode, city);
+	}
+ 
     public String getGeometry(String address, String postalcode, String city) {
 		try {
 			InputStream in = getClass().getResourceAsStream("/application.properties"); 

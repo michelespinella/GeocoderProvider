@@ -12,6 +12,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.apache.http.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.*;
@@ -19,9 +20,14 @@ import com.opencsv.CSVReader;
 
 
 
-public class GeocoderProviderBing {
+public class GeocoderProviderBing extends GeocoderProvider {
 	private static final Logger logger = LogManager.getLogger(GeocoderProviderBing.class);
 
+    @Override
+	public String getGeoCoder(String street, String postCode, String city) throws ParseException, IOException {
+		return this.getGeometry(street, postCode, city);
+	}
+    
 	public String getGeometry(String address, String postalcode, String city) {
 		try {			
 			InputStream in = getClass().getResourceAsStream("/application.properties"); 
