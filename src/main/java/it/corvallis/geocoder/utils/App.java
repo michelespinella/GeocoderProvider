@@ -18,6 +18,7 @@ public class App {
 		try {
 			logger.debug("Provider to use : " + geocoderType);
 			String p = GeocodingService.getGeoCoding(address, postalcode, city, geocoderType);
+			logger.debug("Geometry WKT: "+ p);
 		} catch (Exception e) {
 			logger.debug("Error : " + e.getMessage());
 			// TODO Auto-generated catch block
