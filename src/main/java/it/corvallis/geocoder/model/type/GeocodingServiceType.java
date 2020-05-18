@@ -13,6 +13,4 @@ public enum GeocodingServiceType implements Serializable {
 	public static GeocodingServiceType fromString(String text) {
 		return EnumUtils.readEnum(text, GeocodingServiceType.values());
 	}
-
-
 }
