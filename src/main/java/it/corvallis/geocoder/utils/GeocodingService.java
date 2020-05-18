@@ -18,6 +18,7 @@ public class GeocodingService  {
 		map.put(GeocodingServiceType.MAPQUEST, new GeocoderProviderMapQ());
 		map.put(GeocodingServiceType.LOCIQ, new GeocoderProviderLocIq());
 		map.put(GeocodingServiceType.BING, new GeocoderProviderBing());	
+		map.put(GeocodingServiceType.NOMINATIM, new GeocoderProviderNominatim());	
 	}
 
 	public static String getGeoCoding(String street, String postCode, String city, String geocoderType)
@@ -34,6 +35,8 @@ public class GeocodingService  {
 			return map.get(GeocodingServiceType.LOCIQ);
 		} else if (geocoderType.equals("BING")){
 			return map.get(GeocodingServiceType.BING);
+		}else if (geocoderType.equals("NOMINATIM")){
+			return map.get(GeocodingServiceType.NOMINATIM);
 		}
 		return null;
 

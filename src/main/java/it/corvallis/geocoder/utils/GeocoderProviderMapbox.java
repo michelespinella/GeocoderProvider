@@ -1,4 +1,7 @@
 package it.corvallis.geocoder.utils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Context;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -27,7 +30,11 @@ import com.opencsv.CSVReader;
 
 public class GeocoderProviderMapbox extends GeocoderProvider {
 	private static final Logger logger = LogManager.getLogger(GeocoderProviderMapbox.class);
-
+	@Context
+	private HttpServletRequest request;
+	@Context
+	private HttpServletResponse response;
+	
 	@Override
 	public String getGeoCoder(String street, String postCode, String city) throws ParseException, IOException {
 		return this.getGeometry(street, postCode, city);
