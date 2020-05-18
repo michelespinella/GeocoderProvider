@@ -57,11 +57,10 @@ public class App {
 				e.printStackTrace();
 			}
 		} else if (geocoderType.equals("MAPBOX")){
-			GetGeocoderFactory geocodedAddress = new GetGeocoderFactory();
 			try {
 				logger.debug("Provider to use : " + geocoderType);
-				GeocoderProvider p = geocodedAddress.getGeocoderProvider(geocoderType);
-				p.getGeoCoder(address, postalcode, city);
+				String p = GeocodingService.getGeoCoding(address, postalcode, city, geocoderType);
+				
 			} catch (Exception e) {
 				logger.debug("Error : " + e.getMessage());
 				// TODO Auto-generated catch block

@@ -13,6 +13,7 @@ import java.util.Properties;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
+import org.apache.http.annotation.Contract;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
