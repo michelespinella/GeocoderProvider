@@ -13,7 +13,7 @@
 		<jdk.version>1.8</jdk.version>
 		<jodatime.version>2.5</jodatime.version>
 		<junit.version>4.11</junit.version>
-		<log4j.version>2.11.2</log4j.version>
+		<log4j.version>2.15.0</log4j.version>
 
 		<sonar.projectKey>michelespinella_GeocoderProvider</sonar.projectKey>
 		<sonar.organization>michelespinella-github</sonar.organization>
